@@ -26,7 +26,9 @@ public class Heatmap : MonoBehaviour
 
         foreach (Temp temp in tempsInJson.temps)
         {
+            Debug.Log(GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.x + " " + temp.x);
             Vector3 pos = LatLon.ConvertCoordToPos(GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.x, GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.y, temp.x, temp.y);
+            Debug.Log(GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.x + " " + temp.x);
             positions[i] = new Vector4(pos.x, pos.y, 0, 0);
             properties[i] = new Vector4(50, temp.tmp / 100, 0, 0);
             i++;
@@ -37,5 +39,6 @@ public class Heatmap : MonoBehaviour
         material.SetVectorArray("_Properties", properties);
 
     }
+
 
 }
