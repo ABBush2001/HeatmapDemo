@@ -10,7 +10,7 @@ And converts those values into data points that can then be mapped onto a 3D obj
 You'll also need to set the anchors (the most upper-left coordinate possible and the most lower-right coordinate possible), as these points will be necessary for converting real world coordinates into Unity world positions.
 
 
-##Other Notes
+## Other Notes
 
 - Heatmap.cs : Reads in JSON file w/data on (x,y) positions and temperatures, puts that data into arrays and passes it to the heatmap shader
 - LatLon.cs : Converts (x,y) coordinates into Unity World positions based on anchors
