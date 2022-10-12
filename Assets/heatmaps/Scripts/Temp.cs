@@ -10,4 +10,5 @@ public class Temp
     public float x;
     public float y;
     public float tmp;
+    public string date;
 }
