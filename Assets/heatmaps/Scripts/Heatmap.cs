@@ -21,6 +21,7 @@ public class Heatmap : MonoBehaviour
     public int numDates;
 
     public Slider dateSlider;
+    public int curSliderVal = -1;
 
     void Start()
     {
@@ -40,15 +41,13 @@ public class Heatmap : MonoBehaviour
 
         foreach (Temp temp in tempsInJson.temps)
         {
-            Debug.Log(GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.x + " " + temp.x);
-
+            
             if (i == 0)
             {
                 convertedString = DateTime.Parse(temp.date);
                 Debug.Log(convertedString);
 
                 Vector3 pos = LatLon.ConvertCoordToPos(GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.x, GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.y, temp.x, temp.y);
-                Debug.Log(GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.x + " " + temp.x);
                 positions[i] = new Vector4(pos.x, pos.y, 0, 0);
                 properties[i] = new Vector4(50, temp.tmp / 100, 0, 0);
             }
@@ -56,9 +55,7 @@ public class Heatmap : MonoBehaviour
             {
                 if(DateTime.Parse(temp.date).Equals(convertedString))
                 {
-                    Debug.Log(DateTime.Parse(temp.date));
                     Vector3 pos = LatLon.ConvertCoordToPos(GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.x, GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.y, temp.x, temp.y);
-                    Debug.Log(GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.x + " " + temp.x);
                     positions[i] = new Vector4(pos.x, pos.y, 0, 0);
                     properties[i] = new Vector4(50, temp.tmp / 100, 0, 0);
                 }
@@ -77,7 +74,7 @@ public class Heatmap : MonoBehaviour
     void Update()
     {
        //check if slider value is a whole number - if so, update it to the appropriate date
-       if(dateSlider.value % 1 == 0)
+       if(dateSlider.value % 1 == 0 && dateSlider.value > curSliderVal)
         {
             Temps tempsInJson = JsonUtility.FromJson<Temps>(jsonFile.text);
             int i = 0;
@@ -87,7 +84,6 @@ public class Heatmap : MonoBehaviour
                 if (DateTime.Parse(temp.date).Equals(dates[(int)dateSlider.value]))
                 {
                     Vector3 pos = LatLon.ConvertCoordToPos(GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.x, GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.y, temp.x, temp.y);
-                    Debug.Log(GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.x + " " + temp.x);
                     positions[i] = new Vector4(pos.x, pos.y, 0, 0);
                     properties[i] = new Vector4(50, temp.tmp / 100, 0, 0);
 
@@ -98,7 +94,34 @@ public class Heatmap : MonoBehaviour
 
                 i++;
             }
+
+            curSliderVal = (int)dateSlider.value;
+            Debug.Log("Updated to " + dateSlider.value);
         }
+       else if(dateSlider.value % 1 == 0 && dateSlider.value < curSliderVal)
+        {
+            Temps tempsInJson = JsonUtility.FromJson<Temps>(jsonFile.text);
+            int i = 0;
+
+            foreach (Temp temp in tempsInJson.temps)
+            {
+                if (DateTime.Parse(temp.date).Equals(dates[(int)dateSlider.value]))
+                {
+                    Vector3 pos = LatLon.ConvertCoordToPos(GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.x, GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.y, temp.x, temp.y);
+                    positions[i] = new Vector4(pos.x, pos.y, 0, 0);
+                    properties[i] = new Vector4(50, 0, 0, 0);
+
+                    material.SetInt("_Points_Length", 50);
+                    material.SetVectorArray("_Points", positions);
+                    material.SetVectorArray("_Properties", properties);
+                }
+
+                i++;
+            }
+
+            curSliderVal = (int)dateSlider.value;
+        }
+
     }
 
     private void GetUniqueDates()
