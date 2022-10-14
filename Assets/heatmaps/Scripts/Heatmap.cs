@@ -23,8 +23,12 @@ public class Heatmap : MonoBehaviour
     public Slider dateSlider;
     public int curSliderVal = -1;
 
+    public Vector3 anchor;
+
     void Start()
     {
+        anchor = GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon;
+
         positions = new Vector4[50];
         properties = new Vector4[50];
 
@@ -45,9 +49,8 @@ public class Heatmap : MonoBehaviour
             if (i == 0)
             {
                 convertedString = DateTime.Parse(temp.date);
-                Debug.Log(convertedString);
-
-                Vector3 pos = LatLon.ConvertCoordToPos(GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.x, GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.y, temp.x, temp.y);
+                
+                Vector3 pos = LatLon.ConvertCoordToPos(anchor.x, anchor.y, temp.x, temp.y);
                 positions[i] = new Vector4(pos.x, pos.y, 0, 0);
                 properties[i] = new Vector4(50, temp.tmp / 100, 0, 0);
             }
@@ -55,7 +58,7 @@ public class Heatmap : MonoBehaviour
             {
                 if(DateTime.Parse(temp.date).Equals(convertedString))
                 {
-                    Vector3 pos = LatLon.ConvertCoordToPos(GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.x, GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.y, temp.x, temp.y);
+                    Vector3 pos = LatLon.ConvertCoordToPos(anchor.x, anchor.y, temp.x, temp.y);
                     positions[i] = new Vector4(pos.x, pos.y, 0, 0);
                     properties[i] = new Vector4(50, temp.tmp / 100, 0, 0);
                 }
@@ -83,9 +86,18 @@ public class Heatmap : MonoBehaviour
             {
                 if (DateTime.Parse(temp.date).Equals(dates[(int)dateSlider.value]))
                 {
-                    Vector3 pos = LatLon.ConvertCoordToPos(GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.x, GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.y, temp.x, temp.y);
-                    positions[i] = new Vector4(pos.x, pos.y, 0, 0);
-                    properties[i] = new Vector4(50, temp.tmp / 100, 0, 0);
+
+                    for(int j = 0; j < positions.Length; j++)
+                    {
+                        Vector3 coords = LatLon.ConvertCoordToPos(anchor.x, anchor.y, temp.x, temp.y);
+                        
+                        if(positions[j].x == coords.x && positions[j].y == coords.y)
+                        {
+                            Vector3 pos = LatLon.ConvertCoordToPos(anchor.x, anchor.y, temp.x, temp.y);
+                            properties[j] = new Vector4(50, temp.tmp / 100, 0, 0);
+                        }
+                    }
+                    
 
                     material.SetInt("_Points_Length", 50);
                     material.SetVectorArray("_Points", positions);
@@ -96,7 +108,6 @@ public class Heatmap : MonoBehaviour
             }
 
             curSliderVal = (int)dateSlider.value;
-            Debug.Log("Updated to " + dateSlider.value);
         }
        else if(dateSlider.value % 1 == 0 && dateSlider.value < curSliderVal)
         {
@@ -107,9 +118,16 @@ public class Heatmap : MonoBehaviour
             {
                 if (DateTime.Parse(temp.date).Equals(dates[(int)dateSlider.value]))
                 {
-                    Vector3 pos = LatLon.ConvertCoordToPos(GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.x, GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon.y, temp.x, temp.y);
-                    positions[i] = new Vector4(pos.x, pos.y, 0, 0);
-                    properties[i] = new Vector4(50, 0, 0, 0);
+                    for (int j = 0; j < positions.Length; j++)
+                    {
+                        Vector3 coords = LatLon.ConvertCoordToPos(anchor.x, anchor.y, temp.x, temp.y);
+
+                        if (positions[j].x == coords.x && positions[j].y == coords.y)
+                        {
+                            Vector3 pos = LatLon.ConvertCoordToPos(anchor.x, anchor.y, temp.x, temp.y);
+                            properties[j] = new Vector4(50, temp.tmp / 100, 0, 0);
+                        }
+                    }
 
                     material.SetInt("_Points_Length", 50);
                     material.SetVectorArray("_Points", positions);
