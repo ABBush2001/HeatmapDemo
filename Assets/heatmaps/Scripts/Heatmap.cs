@@ -29,8 +29,14 @@ public class Heatmap : MonoBehaviour
     {
         anchor = GameObject.Find("Anchor1").GetComponent<LocationMarker>().LatLon;
 
-        positions = new Vector4[50];
-        properties = new Vector4[50];
+        positions = new Vector4[100];
+        properties = new Vector4[100];
+
+        for(int k = 0; k < positions.Length; k++)
+        {
+            positions[k] = new Vector4(0, 0, 0, 0);
+            properties[k] = new Vector4(0, 0, 0, 0);
+        }
 
         GetUniqueDates();
 
