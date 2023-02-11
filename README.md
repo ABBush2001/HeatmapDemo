@@ -5,7 +5,7 @@ This small Unity demo takes in a json file where each entry in the file contains
 - A temperature (in fahrenheit)
 - A date
 
-And converts those values into data points that can then be mapped onto a 3D object in the form of a heatmap. This is acheived by applying a material to an object using the heatmap shader (created by [Alan Zucconi](https://www.alanzucconi.com/2016/01/27/arrays-shaders-heatmaps-in-unity3d/)), and then placing that object directly on top of the object that one wants to display the map on. In this example, One mesh is placed directly on top of another mesh.
+And converts those values into data points that can then be mapped onto a 3D object in the form of a heatmap. This is acheived by applying a material using the heatmap shader (created by [Alan Zucconi](https://www.alanzucconi.com/2016/01/27/arrays-shaders-heatmaps-in-unity3d/)) to an object. In this example, A simple mesh is used to demonstrate this.
 
 You'll also need to set the anchors (the most upper-left coordinate possible and the most lower-right coordinate possible), as these points will be necessary for converting real world coordinates into Unity world positions.
 
