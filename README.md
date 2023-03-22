@@ -9,6 +9,7 @@ And converts those values into data points that can then be mapped onto a 3D obj
 
 You'll also need to set the anchors (the most upper-left coordinate possible and the most lower-right coordinate possible), as these points will be necessary for converting real world coordinates into Unity world positions.
 
+Try this demo out on [itch.io](https://nipshot.itch.io/heatmap-demo)
 
 ## Other Notes
 
